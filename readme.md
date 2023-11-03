@@ -1,6 +1,6 @@
 # Montgomery Multiplication
 
-Many algorithms in number theory, like prime testing or integer factorization, and in cryptography, like RSA, require lots of operations modulo a large number. A multiplications like  $ x\cdot y \bmod{n} $  is quite slow to compute with the typical algorithms, since it requires a division to know how many times  
+Many algorithms in number theory, like prime testing or integer factorization, and in cryptography, like RSA, require lots of operations modulo a large number. A multiplications like  $ x y $  is quite slow to compute with the typical algorithms, since it requires a division to know how many times  
 
 $n$  has to be subtracted from the product. And division is a really expensive operation, especially with big numbers.
 
