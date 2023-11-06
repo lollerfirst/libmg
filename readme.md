@@ -23,7 +23,7 @@ $\bar{x} \cdot \bar{y} = (x \cdot y) \cdot r \cdot r \bmod n$
 
 Therefore we need the multiplication -inside the Montgomery space- defined as:
 
-$\bar{x} * \bar{y} := \bar{x} \cdot \bar{y} \cdot r^{-1} \bmod n$
+$\bar{x} * \bar{y} := x \cdot y \cdot r^{-1} \bmod n$
 
 # Montgomery reduction
 
