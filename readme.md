@@ -34,7 +34,7 @@ Because  $\gcd(n, r) = 1$ , we know that there are two numbers  $r^{-1}$�
 
 $0 < r^{-1}, n^{\prime} < n$  with
  
-$$r \cdot r^{-1} + n \cdot n^{\prime} = 1$$, as per the Bézout Identity.
+$r \cdot r^{-1} + n \cdot n^{\prime} = 1$, as per the Bézout Identity.
 
 Using this identity we can write $x \cdot r^{-1}$ as:
  
