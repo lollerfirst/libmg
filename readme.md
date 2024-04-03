@@ -41,7 +41,7 @@ Using this identity we can write $x \cdot r^{-1}$ as:
 ```math
 \begin{aligned} x \cdot r^{-1} &= x \cdot r \cdot r^{-1} / r = x \cdot (-n \cdot n' + 1) / r \\ &= (-x \cdot n \cdot n^{\prime} + x) / r \equiv (-x \cdot n \cdot n^{\prime} + l \cdot r \cdot n + x) / r \bmod n\\ &\equiv ((-x \cdot n^{\prime} + l \cdot r) \cdot n + x) / r \bmod n \end{aligned}$
 ```
-Where $$(-x\cdot n' + l \cdot r)$$ basically means we can subtract any arbitrary
+Where $(-x\cdot n' + l \cdot r)$ basically means we can subtract any arbitrary
 integer $l$ times $r$ from $x\cdot n'$. So that means we can compute a $$q := x \cdot n' \bmod r$$, and then
 compute $$ x\cdot r^{-1} \bmod n = ((x - q\cdot n) / r) \bmod n$$. Remember that if $r$ is chosen as a
 power of 2 (and larger than $n$) then all multiplication and divisions can be done by shifting.
