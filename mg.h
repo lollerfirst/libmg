@@ -27,6 +27,17 @@ typedef struct __mg_t
  */
 int mg_init(mg_t *mg, mpz_t n);
 
+/**
+ * @brief Initializes the mg_t structure with a specific value for r
+ * 
+ * @param mg struct mg_t to be initialized
+ * @param r power of two bigger than n
+ * @param n modulus
+ * @return 0 on success, other on error.
+ */
+int mg_init_r(mg_t *mg, mpz_t r, mpz_t n);
+
+void print_mg_struct(const mg_t *mg);
 int mg_release(mg_t *mg);
 
 /**
