@@ -107,5 +107,5 @@ and get back the multiplication of the two original values!
 
 **This scheme would have been possible without the Montgomery form**
 
-In fact, here is a link to a PoC i've written on the matter: [](https://colab.research.google.com/drive/1lyAAcTkV8LonhTNlxv8VE_Oe4D_EVx4X).
+In fact, here is a link to a PoC i've written on the matter: [link](https://colab.research.google.com/drive/1lyAAcTkV8LonhTNlxv8VE_Oe4D_EVx4X).
 But the Montgomery form makes it much more feasible to use because it reduces by a lot CPU cycles needed to carry out the computations on encrypted values, especially if said computations are many!
