@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <gmp.h>
-#include "mg.h"
+#include <mg.h>
 #include <assert.h>
 
 #define BIT_LENGTH 512
@@ -53,12 +53,14 @@ int main() {
 
     // Here the user would initialize his private mg struct with his private modulus
     // the server initializes a public mg struct with the public modulus
-    mg_t private_mg, public_mg;
+    mg_t private_mg = {0}, public_mg = {0};
     mg_init_r(&private_mg, e, P);
     mg_init_r(&public_mg, e, PQ);
 
+    /*
     print_mg_struct(&private_mg);
     print_mg_struct(&public_mg);
+    */
 
     // Encrypt the plaintext values -- Bring into Montgomery Space
     start = rdtsc();
@@ -76,32 +78,45 @@ int main() {
     gmp_printf("Encrypted value of p: %Zd\n", p_c);
     gmp_printf("Encrypted value of z: %Zd\n", z_c);
 
+    printf("\n");
+
     // THIS IS THE THIRD PARTY SERVER-SIDE STUFF
     // Compute vp_c = (v_c * p_c * R^-1 + z_c) % PQ
     start = rdtsc();
-    mpz_mul(vp_c, v_c, p_c);
-    mg_redc(&public_mg, vp_c);
-    mpz_add(vp_c, vp_c, z_c);
+    mpz_set(vp_c, v_c);
+    int i;
+    for (i=0; i<100; ++i)
+    {
+        mpz_mul(vp_c, vp_c, p_c);
+        mg_redc(&public_mg, vp_c);
+        mpz_add(vp_c, vp_c, z_c);
+    }
     end = rdtsc();
     printf("CPU cycles taken for modular multiplication and addition: %llu\n", end - start);
 
     // Print computed value vp_c
-    gmp_printf("Computed value vp_c: %ZX\n", vp_c);
+    gmp_printf("Computed value vp_c: %Zd\n", vp_c);
+    printf("\n");
 
     // Compare with plain multiplication and addition on host, modulo P
     start = rdtsc();
-    mpz_set_ui(z, v);
-    mpz_mul_ui(vp, z, p);
-    mpz_add_ui(vp, vp, z_val);
-    mpz_mod(vp, vp, P);
+    mpz_set_ui(vp, v);
+    for (i=0; i<100; ++i)
+    {
+        mpz_mul_ui(vp, vp, p);
+        mpz_add_ui(vp, vp, z_val);
+        mpz_mod(vp, vp, P);
+    }
     end = rdtsc();
     printf("CPU cycles for multiplication and addition (plain computation): %lld\n", end-start);
+    printf("\n");
 
     // Decryption of the product of encrypted values -- Bring out of Montgomery Form
     start = rdtsc();
     mg_mg2i(&private_mg, vp_c);
     end = rdtsc();
     printf("CPU cycles taken for decryption: %llu\n", end - start);
+    printf("\n");
 
     // Print decrypted value
     gmp_printf("Decrypted result: %Zd\n", vp_c);
