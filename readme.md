@@ -38,7 +38,7 @@ Because  
 ```math
 \gcd(n, r) = 1
 ```
-we know that there are two numbers  $r^{-1}$  and  $n^{\prime}$  with  
+we know that there are two numbers $ \ $ $r^{-1}$  and  $n^{\prime}$  with  
 
 $0 < r^{-1}, n^{\prime} < n$  with
  
