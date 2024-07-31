@@ -1,3 +1,67 @@
+# Installation
+Ensure that you have the following installed on your system:
+- CMake (version 3.0 or higher)
+- GMP library (`libgmp`)
+
+## Building the Project
+
+Follow these steps to build the project:
+
+1. **Clone the repository**
+
+   ```sh
+   git clone <repository_url>
+   cd MyProject
+   ```
+
+2. **Create a build directory**
+
+   ```sh
+   mkdir build
+   cd build
+   ```
+
+3. **Run CMake**
+
+   ```sh
+   cmake ..
+   ```
+
+4. **Build the project**
+
+   ```sh
+   make
+   ```
+
+## Running the Executables
+
+After the build is complete, you will find the executables `test_mg` and `poc_fhe` in the `build` directory. You can run them using:
+
+```sh
+./test_mg
+./poc_fhe
+```
+
+## Troubleshooting
+
+If you encounter the following error:
+
+```
+libgmp is not installed. Please install libgmp.
+```
+
+It means that the GMP library is not found on your system. Install it using your package manager. For example, on Debian-based systems:
+
+```sh
+sudo apt-get install libgmp-dev
+```
+
+On Red Hat-based systems:
+
+```sh
+sudo yum install gmp-devel
+```
+
 # Montgomery Multiplication
 
 Many algorithms in number theory, like prime testing or integer factorization, and in cryptography, like RSA, require lots of operations modulo a large number.
