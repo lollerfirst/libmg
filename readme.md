@@ -41,6 +41,10 @@ After the build is complete, you will find the executables `test_mg` and `poc_fh
 ./test_mg
 ./poc_fhe
 ```
+You will also find the static library:
+```
+libmg.a
+```
 
 ## Troubleshooting
 
