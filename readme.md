@@ -101,7 +101,7 @@ c_1 = \text{REDC}_P(v_1r^2)
 \end{align*}
 ```
 
-Now we can broadcast the encrypted values $c_0, c_1$ as well as the public modulus $PQ$ to a third party that will carry out -say- a multiplication.
+Now we can broadcast the encrypted values $c_0, c_1$ as well as the public modulus $PQ$ to a third party that will carry out -for example- a multiplication.
 The party doesn't know the value of $P$ unless it can factor $PQ$, but the modular algebra that works under $P$ will work under $PQ$ either.
 So, the third party computes the product of the encrypted values following the rules of the Montgomery form:
 
