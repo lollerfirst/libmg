@@ -66,10 +66,6 @@ sudo yum install gmp-devel
 
 This library provides functionality for performing Montgomery reductions, which are useful in modular arithmetic operations, particularly in cryptographic applications.
 
-## Prerequisites
-
-Ensure that you have the GMP library (`libgmp`) installed on your system.
-
 ## Initialization
 
 Before using the Montgomery reduction functions, you must initialize the `mg_t` structure. There are two initialization functions available:
