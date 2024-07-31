@@ -106,7 +106,7 @@ The party doesn't know the value of $P$ unless it can factor $PQ$, but the modul
 So, the third party computes the product of the encrypted values following the rules of the Montgomery form:
 
 ```math
-c_* = \text{REDC}_{PQ}(v_0v_1)
+c_* = \text{REDC}_{PQ}(c_0c_1)
 ```
 
 Now it can send back the result to the host, which will be able to decrypt with:
