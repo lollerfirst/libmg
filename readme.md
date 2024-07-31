@@ -62,6 +62,142 @@ On Red Hat-based systems:
 sudo yum install gmp-devel
 ```
 
+# Using the Montgomery Reduction Library
+
+This library provides functionality for performing Montgomery reductions, which are useful in modular arithmetic operations, particularly in cryptographic applications.
+
+## Prerequisites
+
+Ensure that you have the GMP library (`libgmp`) installed on your system.
+
+## Initialization
+
+Before using the Montgomery reduction functions, you must initialize the `mg_t` structure. There are two initialization functions available:
+
+1. **Standard Initialization**
+
+   ```c
+   mg_t mg;
+   mpz_t n;
+   mpz_init_set_str(n, "YOUR_MODULUS_HERE", 10);  // Set your modulus here
+   mg_init(&mg, n);
+   mpz_clear(n);
+   ```
+
+2. **Initialization with a Specific Value for `r`**
+
+   ```c
+   mg_t mg;
+   mpz_t r, n;
+   mpz_init_set_str(r, "YOUR_R_HERE", 10);  // Set your r here
+   mpz_init_set_str(n, "YOUR_MODULUS_HERE", 10);  // Set your modulus here
+   mg_init_r(&mg, r, n);
+   mpz_clear(r);
+   mpz_clear(n);
+   ```
+
+## Converting Numbers
+
+To work with numbers in Montgomery form, use the following functions:
+
+1. **Convert to Montgomery Form**
+
+   ```c
+   mpz_t x;
+   mpz_init_set_str(x, "YOUR_NUMBER_HERE", 10);  // Set your number here
+   mg_i2mg(&mg, x);
+   ```
+
+2. **Convert from Montgomery Form**
+
+   ```c
+   mg_mg2i(&mg, x);
+   ```
+
+## Performing Montgomery Reduction
+
+To perform a Montgomery reduction on a number `x`, use the `mg_redc` function:
+
+```c
+mg_redc(&mg, x);
+```
+
+## Printing the Montgomery Structure
+
+To print the contents of the `mg_t` structure for debugging purposes, use:
+
+```c
+print_mg_struct(&mg);
+```
+
+## Releasing Resources
+
+Once you are done using the Montgomery reduction library, release the resources associated with the `mg_t` structure:
+
+```c
+mg_release(&mg);
+```
+
+## Example Usage
+
+Here is a complete example that demonstrates the initialization, conversion, reduction, and cleanup:
+
+```c
+#include <gmp.h>
+#include <stdio.h>
+#include "libmg.h"  // Include your header file
+
+int main() {
+    mg_t mg;
+    mpz_t n, r, x, y;
+
+    // Initialize modulus and r
+    mpz_init_set_str(n, "YOUR_MODULUS_HERE", 10);
+    mpz_init_set_str(r, "YOUR_R_HERE", 10);
+
+    // Initialize the Montgomery structure
+    mg_init_r(&mg, r, n);
+
+    // Initialize and set x
+    mpz_init_set_str(x, "YOUR_NUMBER_HERE", 10);
+    mpz_init_set_str(y, "YOUR_NUMBER_HERE", 10);
+
+    // Convert x to Montgomery form
+    mg_i2mg(&mg, x);
+    mg_i2mg(&mg, y);
+
+    // Perform Montgomery reduction
+    mpz_mul(x, x, y);
+    mg_redc(&mg, x);
+
+    // Convert x out of Montgomery form
+    mg_mg2i(&mg, x);
+
+    // Print the result
+    gmp_printf("Result: %Zd\n", x);
+
+    // Release resources
+    mg_release(&mg);
+
+    // Clear mpz_t variables
+    mpz_clear(n);
+    mpz_clear(r);
+    mpz_clear(x);
+    mpz_clear(y);
+
+    return 0;
+}
+```
+
+Replace `YOUR_MODULUS_HERE`, `YOUR_R_HERE`, and `YOUR_NUMBER_HERE` with appropriate values for your application.
+
+## Notes
+
+- Ensure that the modulus `n` is a prime number for the Montgomery reduction to work correctly.
+- The value of `r` should be a power of two that is greater than `n`.
+
+By following these instructions, you can effectively utilize the Montgomery reduction library in your applications.
+
 # Montgomery Multiplication
 
 Many algorithms in number theory, like prime testing or integer factorization, and in cryptography, like RSA, require lots of operations modulo a large number.
