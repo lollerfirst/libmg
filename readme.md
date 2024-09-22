@@ -11,7 +11,7 @@ Follow these steps to build the project:
 
    ```sh
    git clone git@github.com:lollerfirst/libmg.git
-   cd MyProject
+   cd libmg
    ```
 
 2. **Create a build directory**
