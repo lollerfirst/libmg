@@ -37,6 +37,14 @@ int mg_init(mg_t *mg, mpz_t n);
  */
 int mg_init_r(mg_t *mg, mpz_t r, mpz_t n);
 
+/**
+ * @brief Prints the contents of the mg_t structure
+ * 
+ * This function outputs the initialization status and the values of the 
+ * Montgomery form parameters stored in the mg_t structure.
+ * 
+ * @param mg Pointer to the mg_t structure to be printed
+ */
 void print_mg_struct(const mg_t *mg);
 int mg_release(mg_t *mg);
 
@@ -64,4 +72,19 @@ void mg_i2mg(mg_t *mg, mpz_t x);
  */
 void mg_mg2i(mg_t *mg, mpz_t x);
 
-#endif 
+/**
+ * @brief Releases multiple mg_t structures
+ * 
+ * This macro calls mg_release on each of its arguments.
+ * 
+ * @param ... Variable number of mg_t pointers to be released
+ */
+#define mg_clears(...) \
+    do { \
+        mg_t *mg_array[] = {__VA_ARGS__}; \
+        for (size_t i = 0; i < sizeof(mg_array) / sizeof(mg_array[0]); ++i) { \
+            mg_release(mg_array[i]); \
+        } \
+    } while (0)
+
+#endif

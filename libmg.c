@@ -17,6 +17,14 @@ typedef struct __mg_t
     mpz_t n_inv;
 } mg_t;
 
+/**
+ * @brief Prints the contents of the mg_t structure
+ * 
+ * This function outputs the initialization status and the values of the 
+ * Montgomery form parameters stored in the mg_t structure.
+ * 
+ * @param mg Pointer to the mg_t structure to be printed
+ */
 void print_mg_struct(const mg_t *mg) {
     printf("Init: %s\n", mg->init ? "true" : "false");
     gmp_printf("ctx: %Zd\n", mg->ctx);
@@ -127,6 +135,15 @@ int mg_init_r(mg_t *mg, mpz_t r, mpz_t n)
     return 0;
 }
 
+/**
+ * @brief Releases the resources held by the mg_t structure
+ * 
+ * This function clears the memory used by the mpz_t fields within the mg_t 
+ * structure and marks it as uninitialized.
+ * 
+ * @param mg Pointer to the mg_t structure to be released
+ * @return 0 on success, other on error.
+ */
 int mg_release(mg_t *mg)
 {
     if (!mg->init)
