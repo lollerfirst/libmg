@@ -37,6 +37,14 @@ int mg_init(mg_t *mg, mpz_t n);
  */
 int mg_init_r(mg_t *mg, mpz_t r, mpz_t n);
 
+/**
+ * @brief Prints the contents of the mg_t structure
+ * 
+ * This function outputs the initialization status and the values of the 
+ * Montgomery form parameters stored in the mg_t structure.
+ * 
+ * @param mg Pointer to the mg_t structure to be printed
+ */
 void print_mg_struct(const mg_t *mg);
 int mg_release(mg_t *mg);
 
