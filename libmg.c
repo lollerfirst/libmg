@@ -127,6 +127,12 @@ int mg_init_r(mg_t *mg, mpz_t r, mpz_t n)
     return 0;
 }
 
+/**
+ * @brief Releases the resources held by the mg_t structure
+ * 
+ * @param mg struct mg_t to be released
+ * @return 0 on success, other on error.
+ */
 int mg_release(mg_t *mg)
 {
     if (!mg->init)

@@ -64,4 +64,19 @@ void mg_i2mg(mg_t *mg, mpz_t x);
  */
 void mg_mg2i(mg_t *mg, mpz_t x);
 
-#endif 
+/**
+ * @brief Releases multiple mg_t structures
+ * 
+ * This macro calls mg_release on each of its arguments.
+ * 
+ * @param ... Variable number of mg_t pointers to be released
+ */
+#define mg_clears(...) \
+    do { \
+        mg_t *mg_array[] = {__VA_ARGS__}; \
+        for (size_t i = 0; i < sizeof(mg_array) / sizeof(mg_array[0]); ++i) { \
+            mg_release(mg_array[i]); \
+        } \
+    } while (0)
+
+#endif
