@@ -102,7 +102,13 @@ int mg_init(mg_t *mg, mpz_t n)
     mpz_mul_2exp(mg->r, mg->r, l);
     mpz_mul_2exp(mg->r_sq, mg->r, l);
     mpz_mod(mg->r_sq, mg->r_sq, mg->n);
-    mpz_invert(mg->n_inv, mg->n, mg->r);
+    int l = mpz_sizeinbase(mg->r, 2);
+    int sqrt_l = (int)sqrt(l);
+    if (sqrt_l * sqrt_l == l) {
+        mg_inv_mod2(mg->n_inv, mg->n, l);
+    } else {
+        mpz_invert(mg->n_inv, mg->n, mg->r);
+    }
     mg->init = true;
     return 0;
 }
@@ -151,7 +157,13 @@ int mg_init_r(mg_t *mg, mpz_t r, mpz_t n)
     int l = mpz_sizeinbase(mg->r, 2);
     mpz_mul_2exp(mg->r_sq, mg->r, l-1);
     mpz_mod(mg->r_sq, mg->r_sq, mg->n);
-    mpz_invert(mg->n_inv, mg->n, mg->r);
+    int l = mpz_sizeinbase(mg->r, 2);
+    int sqrt_l = (int)sqrt(l);
+    if (sqrt_l * sqrt_l == l) {
+        mg_inv_mod2(mg->n_inv, mg->n, l);
+    } else {
+        mpz_invert(mg->n_inv, mg->n, mg->r);
+    }
     mg->init = true;
 
     mpz_clear(rem);
