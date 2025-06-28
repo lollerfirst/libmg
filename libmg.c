@@ -2,6 +2,21 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <stdio.h>
+#include <math.h>
+
+static void mg_inv_mod2(mpz_t inv, mpz_t a, unsigned int m) {
+    mpz_set_ui(inv, 1UL);
+    mpz_t temp;
+    mpz_init(temp);
+    for (unsigned int i=2; i<m; i <<= 1) {
+        mpz_mul(temp, inv, a);
+        mpz_neg(temp, temp);
+        mpz_add_ui(temp, temp, 2);
+        mpz_mul(inv, inv, temp);
+        mpz_mod_2exp(inv, inv, i);
+    }
+    mpz_clear(temp);
+}
 
 /**
  * @brief Structure holding key information for the Montgomery form
@@ -102,8 +117,8 @@ int mg_init(mg_t *mg, mpz_t n)
     mpz_mul_2exp(mg->r, mg->r, l);
     mpz_mul_2exp(mg->r_sq, mg->r, l);
     mpz_mod(mg->r_sq, mg->r_sq, mg->n);
-    int l = mpz_sizeinbase(mg->r, 2);
-    int sqrt_l = (int)sqrt(l);
+    l = mpz_sizeinbase(mg->r, 2);
+    int sqrt_l = floor(sqrt(l));
     if (sqrt_l * sqrt_l == l) {
         mg_inv_mod2(mg->n_inv, mg->n, l);
     } else {
@@ -111,20 +126,6 @@ int mg_init(mg_t *mg, mpz_t n)
     }
     mg->init = true;
     return 0;
-}
-
-static void mg_inv_mod2(mpz_t inv, mpz_t a, unsigned int m) {
-    mpz_set_ui(inv, 1UL);
-    mpz_t temp;
-    mpz_init(temp);
-    for (unsigned int i=2; i<m; i <<= 1) {
-        mpz_mul(temp, inv, a);
-        mpz_neg(temp, temp);
-        mpz_add_ui(temp, temp, 2);
-        mpz_mul(inv, inv, temp);
-        mpz_mod_2exp(inv, inv, i);
-    }
-    mpz_clear(temp);
 }
 
 /**
@@ -157,8 +158,7 @@ int mg_init_r(mg_t *mg, mpz_t r, mpz_t n)
     int l = mpz_sizeinbase(mg->r, 2);
     mpz_mul_2exp(mg->r_sq, mg->r, l-1);
     mpz_mod(mg->r_sq, mg->r_sq, mg->n);
-    int l = mpz_sizeinbase(mg->r, 2);
-    int sqrt_l = (int)sqrt(l);
+    int sqrt_l = floor(sqrt(l));
     if (sqrt_l * sqrt_l == l) {
         mg_inv_mod2(mg->n_inv, mg->n, l);
     } else {

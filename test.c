@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "mg.h"
 
 int main() {
