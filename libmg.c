@@ -107,6 +107,19 @@ int mg_init(mg_t *mg, mpz_t n)
     return 0;
 }
 
+static void mg_inv_mod2(mpz_t inv, mpz_t a, unsigned int m) {
+    mpz_set_ui(inv, 1UL);
+    mpz_t temp;
+    mpz_init(temp);
+    for (unsigned int i=2; i<m; i <<= 1) {
+        mpz_mul(temp, inv, a);
+        mpz_neg(temp, temp);
+        mpz_add_ui(temp, temp, 2);
+        mpz_mul(inv, inv, temp);
+        mpz_mod_2exp(inv, inv, i);
+    }
+    mpz_clear(temp);
+}
 
 /**
  * @brief Initializes the mg_t structure with a specific value for r
@@ -118,11 +131,19 @@ int mg_init(mg_t *mg, mpz_t n)
  */
 int mg_init_r(mg_t *mg, mpz_t r, mpz_t n)
 {
-    //assert(mpz_probab_prime_p(n, 7) > 0);
     assert(mpz_cmp(r, n) > 0);
-    
+
     if (mg->init)
         return -1;
+
+    mpz_t rem;
+    mpz_init(rem);
+
+    mpz_mod_ui(rem, n, 2);
+    if (mpz_cmp_ui(rem, 2) != 0) {
+        mpz_clear(rem);
+        return -1;
+    }
 
     mpz_inits(mg->n, mg->n_inv, mg->r, mg->r_sq, mg->ctx, NULL);
     mpz_set(mg->n, n);
@@ -132,6 +153,8 @@ int mg_init_r(mg_t *mg, mpz_t r, mpz_t n)
     mpz_mod(mg->r_sq, mg->r_sq, mg->n);
     mpz_invert(mg->n_inv, mg->n, mg->r);
     mg->init = true;
+
+    mpz_clear(rem);
     return 0;
 }
 
