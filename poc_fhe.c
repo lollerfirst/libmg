@@ -54,8 +54,8 @@ int main() {
     // Here the user would initialize his private mg struct with his private modulus
     // the server initializes a public mg struct with the public modulus
     mg_t private_mg = {0}, public_mg = {0};
-    mg_init_r(&private_mg, e, P);
-    mg_init_r(&public_mg, e, PQ);
+    mg_init(&private_mg, P);
+    mg_init(&public_mg, PQ);
 
     /*
     print_mg_struct(&private_mg);

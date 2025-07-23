@@ -12,7 +12,6 @@ typedef struct __mg_t
     bool init;
     mpz_t ctx;
     mpz_t r;
-    mpz_t r_mask;
     mpz_t r_sq;
     mpz_t n;
     mpz_t n_inv;
@@ -21,21 +20,14 @@ typedef struct __mg_t
 /**
  * @brief Initializes the mg_t structure
  * 
+ * This function automatically selects an r value of the form 2^(k^2) where k^2 is 
+ * a perfect square and r > n.
+ * 
  * @param mg struct mg_t to be initialized
  * @param n modulus
  * @return 0 on success, other on error.
  */
 int mg_init(mg_t *mg, mpz_t n);
-
-/**
- * @brief Initializes the mg_t structure with a specific value for r
- * 
- * @param mg struct mg_t to be initialized
- * @param r power of two bigger than n
- * @param n modulus
- * @return 0 on success, other on error.
- */
-int mg_init_r(mg_t *mg, mpz_t r, mpz_t n);
 
 /**
  * @brief Prints the contents of the mg_t structure

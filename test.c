@@ -2,7 +2,7 @@
 
 int main() {
     // Initialize variables
-    mg_t mg;
+    mg_t mg = {0};  // Initialize to zero
     mpz_t number;
     mpz_t number2;
     mpz_t reference;

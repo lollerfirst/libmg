@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <stdio.h>
-#include <math.h>
+#include <mg.h>
 
 static void mg_inv_mod2(mpz_t inv, mpz_t a, unsigned int m) {
     mpz_set_ui(inv, 1UL);
@@ -17,20 +17,6 @@ static void mg_inv_mod2(mpz_t inv, mpz_t a, unsigned int m) {
     }
     mpz_clear(temp);
 }
-
-/**
- * @brief Structure holding key information for the Montgomery form
- * 
- */
-typedef struct __mg_t
-{
-    bool init;
-    mpz_t ctx;
-    mpz_t r;
-    mpz_t r_sq;
-    mpz_t n;
-    mpz_t n_inv;
-} mg_t;
 
 /**
  * @brief Prints the contents of the mg_t structure
@@ -99,6 +85,9 @@ void mg_mg2i(mg_t *mg, mpz_t x)
 /**
  * @brief Initializes the mg_t structure
  * 
+ * This function automatically selects an r value of the form 2^(k^2) where k^2 is 
+ * a perfect square and r > n.
+ * 
  * @param mg struct mg_t to be initialized
  * @param n modulus
  * @return 0 on success, other on error.
@@ -112,63 +101,40 @@ int mg_init(mg_t *mg, mpz_t n)
 
     mpz_inits(mg->n, mg->n_inv, mg->r, mg->r_sq, mg->ctx, NULL);
     mpz_set(mg->n, n);
+    
+    // Find the smallest k such that 2^(k^2) > n
     mpz_set_ui(mg->r, 1UL);
-    int l = mpz_sizeinbase(mg->n, 2);
-    mpz_mul_2exp(mg->r, mg->r, l);
-    mpz_mul_2exp(mg->r_sq, mg->r, l);
-    mpz_mod(mg->r_sq, mg->r_sq, mg->n);
-    l = mpz_sizeinbase(mg->r, 2);
-    int sqrt_l = floor(sqrt(l));
-    if (sqrt_l * sqrt_l == l) {
-        mg_inv_mod2(mg->n_inv, mg->n, l);
-    } else {
-        mpz_invert(mg->n_inv, mg->n, mg->r);
+    int k = 1;
+    while (true) {
+        int k_squared = k * k;
+        mpz_set_ui(mg->r, 1UL);
+        mpz_mul_2exp(mg->r, mg->r, k_squared);
+        
+        // Check if r > n
+        if (mpz_cmp(mg->r, mg->n) > 0) {
+            break;
+        }
+        k++;
+        
+        // Safety check to prevent infinite loop
+        if (k > 100) {
+            mpz_clears(mg->n, mg->n_inv, mg->r, mg->r_sq, mg->ctx, NULL);
+            return -1;
+        }
     }
-    mg->init = true;
-    return 0;
-}
-
-/**
- * @brief Initializes the mg_t structure with a specific value for r
- * 
- * @param mg struct mg_t to be initialized
- * @param r power of two bigger than n
- * @param n modulus
- * @return 0 on success, other on error.
- */
-int mg_init_r(mg_t *mg, mpz_t r, mpz_t n)
-{
-    assert(mpz_cmp(r, n) > 0);
-
-    if (mg->init)
-        return -1;
-
-    mpz_t rem;
-    mpz_init(rem);
-
-    mpz_mod_ui(rem, n, 2);
-    if (mpz_cmp_ui(rem, 2) != 0) {
-        mpz_clear(rem);
-        return -1;
-    }
-
-    mpz_inits(mg->n, mg->n_inv, mg->r, mg->r_sq, mg->ctx, NULL);
-    mpz_set(mg->n, n);
-    mpz_set(mg->r, r);
-    int l = mpz_sizeinbase(mg->r, 2);
+    
+    // Now mg->r is set to 2^(k^2) where r > n
+    int l = mpz_sizeinbase(mg->r, 2);  // l should be k^2 + 1
     mpz_mul_2exp(mg->r_sq, mg->r, l-1);
     mpz_mod(mg->r_sq, mg->r_sq, mg->n);
-    int sqrt_l = floor(sqrt(l));
-    if (sqrt_l * sqrt_l == l) {
-        mg_inv_mod2(mg->n_inv, mg->n, l);
-    } else {
-        mpz_invert(mg->n_inv, mg->n, mg->r);
-    }
+    
+    // Since l-1 = k^2, we know it's a perfect square, so use fast modular inverse
+    mg_inv_mod2(mg->n_inv, mg->n, l);
+    
     mg->init = true;
-
-    mpz_clear(rem);
     return 0;
 }
+
 
 /**
  * @brief Releases the resources held by the mg_t structure
