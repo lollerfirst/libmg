@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <mg.h>
 
+// Newton-Ralphson iteration (https://arxiv.org/pdf/1209.6626)
+// Computes the inverse of a mod 2^2k.
 static void mg_inv_mod2(mpz_t inv, mpz_t a, unsigned int m) {
     mpz_set_ui(inv, 1UL);
     mpz_t temp;
