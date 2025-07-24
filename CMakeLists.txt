@@ -17,6 +17,3 @@ add_executable(test_mg test.c libmg)
 add_test(NAME TestMG COMMAND test_mg) 
 
 target_link_libraries(test_mg ${GMP_LIBRARIES} m)
-
-add_executable(poc_fhe poc_fhe.c libmg)
-target_link_libraries(poc_fhe ${GMP_LIBRARIES} m)

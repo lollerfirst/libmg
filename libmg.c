@@ -106,30 +106,30 @@ int mg_init(mg_t *mg, mpz_t n)
     
     // Find the smallest k such that 2^(k^2) > n
     mpz_set_ui(mg->r, 1UL);
-    int k_squared = 1;
+    int k = 1;
     while (true) {
         mpz_set_ui(mg->r, 1UL);
-        mpz_mul_2exp(mg->r, mg->r, k_squared);
+        mpz_mul_2exp(mg->r, mg->r, k);
         
         // Check if r > n
         if (mpz_cmp(mg->r, mg->n) > 0) {
             break;
         }
         
-        k_squared <<= 1;
+        k <<= 1;
         
         // Safety check to prevent infinite loop
-        if (k_squared > 4072) {
+        if (k > 4072) {
             mpz_clears(mg->n, mg->n_inv, mg->r, mg->r_sq, mg->ctx, NULL);
             return -1;
         }
     }
 
-    mpz_mul_2exp(mg->r_sq, mg->r, k_squared);
+    mpz_mul_2exp(mg->r_sq, mg->r, k);
     mpz_mod(mg->r_sq, mg->r_sq, mg->n);
     
     // Since l-1 = k^2, we know it's a perfect square, so use fast modular inverse
-    mg_inv_mod2(mg->n_inv, mg->n, k_squared);
+    mg_inv_mod2(mg->n_inv, mg->n, k);
     
     mg->init = true;
     return 0;
