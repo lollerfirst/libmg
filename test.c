@@ -1,9 +1,9 @@
-#include <stdio.h>
-#include "mg.h"
+#include <mg.h>
+#include <assert.h>
 
 int main() {
     // Initialize variables
-    mg_t mg;
+    mg_t mg = {0};  // Initialize to zero
     mpz_t number;
     mpz_t number2;
     mpz_t reference;
@@ -48,6 +48,8 @@ int main() {
     // Output the result
     gmp_printf("multiplied and converted back: %Zd\n", number);
     gmp_printf("multiplied original result: %Zd\n", reference);
+
+    assert(mpz_cmp(number, reference) == 0);
 
     // Release resources
     mpz_clear(number);
